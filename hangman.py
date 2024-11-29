@@ -15,50 +15,122 @@
         #  If in the string are no underscores, congratulate a player and end the game. 
         #  Print out the number of unsuccessful tries and (if you want) print out the corresponding picture of a hangman. 
         #  If the number of unsuccessful tries is 9 or higher, the player loses the game and ends the game.
-from random import choice
+
+HANGMAN_PICS = ['''
++---+
+    |
+    |
+    |
+    ===''', '''
++---+
+ O  |
+    |
+    |
+===''', '''
++---+
+ O  |
+ |  |
+    |
+===''', '''
++---+
+ O  |
+/|  |
+    |
+===''', '''
++---+
+ O  |
+/|\ |
+    |
+===''', '''
++---+
+ O  |
+/|\ |
+/   
+===''', '''
++---+
+ O  |
+/|\ |
+/ \ |     
+===''']
+
+
 
 words = ("pyladies", "thomas", "snack")
+false_letters = []
+unsuccessful_tries = 0
+secret_word = get_random_word(words)
 
-def board ():
-    chosen_word = choice(words)
-    print(chosen_word)
-    length_of_word = len(chosen_word)
+from random import randrange 
+def get_random_word(words):     # returns random string from the list 
+    random_index = randrange (0, len(words)) # returns random integer from 0 to length of list of words
+    print (words[random_index])
+    return words[random_index]  # returns random string from list of words with index stored in random variable
+
+
+get_random_word(words)
+
+def display_board(false_letters, unsuccessfull_tries, secret_word):
+    print (HANGMAN_PICS(len(false_letters)))
+    
+
+    for letter in false_letters: 
+        false_letters.append(letter)
+        print("False letters: ", false_letters, end = ' ')
+    
+    length_of_word = len(secret_word)
     board = "-" * length_of_word
-    print(board)
-board()
 
-def move (board):
-        used_letters = []
-        user_letter = input("Give me a letter, lowercase only: ")
-        if user_letter in chosen_word:
-            return board()
-            board.index(user_letter) == user_letter
-            used_letters.append(user_letter)
-            print(board)
-            print(used_letters)
-        elif user_letter not in chosen_word:
-            unsuccessful_tries +=1
-            used_letters.append(user_letter)
-            print(board)
-            print(used_letters)
-        else: 
-             print("Am I a joke to you?")
 
-# def board_update ():
+   print(board)
+    return board
 
-    # ask player for letter 
-    # if correct: update board 
-    # if wrong: update unsuccessful tries 
+# def game_status ():
+     
+# def play_again (): 
 
 
 
-# def move (string, position_number, character):
-    # part_a = string[:position_number] 
-    # part_b = string[position_number + 1:]
-    # board_update = part_a + character + part_b # splits string so that character can be inserted at either player or pc position
-    # return board_update
 
 
 
-# unsuccsessful_tries = 0 
 
+
+# def move (board):
+      #  user_letter = input("Give me a letter, lowercase only: ")
+       # if user_letter in used_letters:
+           # print("You already used that one. Try again.")
+        #elif user_letter[i] in chosen_word:
+
+
+          #  board = board[i] + chosen_word [i] + board[i]
+
+
+
+
+
+           # position_user_letter = chosen_word.index(user_letter)
+            #print(position_user_letter)
+            #board[position_user_letter] == user_letter
+            #used_letters.append(user_letter)
+            #print(board)
+            #print(used_letters)
+        #elif user_letter not in chosen_word:
+         #   unsuccessful_tries += 1
+          #  used_letters.append(user_letter)
+           # print(board)
+            #print(used_letters)
+        #else: 
+           #  print("Am I a joke to you?")
+
+
+
+#move(empty_board())
+
+#def game (board, move):
+     
+
+# unsuccsessful_tries = 9  
+
+# If in the string are no underscores, congratulate a player and end the game. 
+        #  Print out the number of unsuccessful tries and (if you want) print out the corresponding picture of a hangman. 
+        #  If the number of unsuccessful tries is 9 or higher, the player loses the game and ends the game.
