@@ -1,136 +1,122 @@
 # Game time! Let’s create a hangman game together 
-# The game should look like this. Separate the project into multiple functions, take care of good descriptive names and write comments 
-# (for future you). You should also put everything to git after every step. 
-# • Computer will randomly choose a word (as a beginning out of 3 options). 
-#   Also for simplicity use lower case and only words where a letter is used only once. Eg. Mentoring or Pyladies :)
-#   • Default setting of game “status” is a string (or a list) with that many underscores as there are letters in the chosen word. 
-#   • Default setting of unsuccessful tries is zero. (as a counter of guesses) • Keep repeating: 
-        #  Ask the player for a letter. 
-        #  If the letter is in the chosen word, replace corresponding 
-        #  underscores with letters in the game status. Write a function for this. 
+
+from random import choice
+
+words = (
+    "pyladies", "thomas", "snack", "shoe", "nupi", "car", "house", "pig", "mouse", "tiger", "lion", "wolf", "sock", "panther", "shirt", 
+    "flower", "woman", "power", "snow", "star", "crash", "flight", "fight", "game", "python", "coding", "animals", "nightmares", 
+    "windstorm"
+           )
+secret_word =  choice(words)  # chooses a random word from list of words 
+lenght_of_secret_word = len(secret_word)
+blanks = "-" * lenght_of_secret_word # variable for game board, where each character of the secret word is replaced by a "-"
+
+false_letters = [] # initializes list of false letters 
+unsuccessful_tries = 0 # max 7
+used_letters = [] # initilizes list of used letters
+
+hangman_stages = [
+    """
+      +---+
+          |
+          |
+          |
+         ===
+    """,
+    """
+      +---+
+      O   |
+          |
+          |
+         ===
+    """,
+    """
+      +---+
+      O   |
+      |   |
+          |
+         ===
+    """,
+    """
+      +---+
+      O   |
+     /|   |
+          |
+         ===
+    """,
+    """
+      +---+
+      O   |
+     /|\  |
+          |
+         ===
+    """,
+    """
+      +---+
+      O   |
+     /|\  |
+     /    |
+         ===
+    """,
+    """
+      +---+
+      O   |
+     /|\  |
+     / \  |
+         ===
+    """,
+]
+
+def player_move():
+    global blanks
+    global used_letters
+    global unsuccessful_tries
+
+    # game runs as long as there are dashes in the `board' and as long as unsiccessful
+    # tries are <7 
+    # 7 bc this is when the hang man hangs + one additional try
+    while "-" in blanks and unsuccessful_tries < 7:  
+        print(blanks)
+        user_letter = (input("Can you guess the word? Give me a letter! ")).lower() # catches upper- and lowercase letters
+
+        if len(user_letter) != 1: # check for only one letter 
+            print("Please enter only one letter at a time.") 
+        
+        elif not ('a' <= user_letter <= 'z'):  # cchecks if input is a letter 
+            print("The heck am I supposed to do with that?! Please enter a letter.")
+
+        elif user_letter in used_letters: # checks if letter has already been used and asks again if so
+            print("You've lready used that one!")
+        
+        else:
+            used_letters.append(user_letter)  # if letter is new, letter is added to used letters list 
+            print ("Used letters: ", used_letters)
+        
+            if user_letter in secret_word: # if letter is new and in secret word, dash will be replaced by character 
+                index = secret_word.index(user_letter) # this returns the index of that letter in the secret word
+                part_a = blanks[:index] # splits blank into part before and part after that letter (using corresponding index)
+                part_b = blanks[index + 1:]
+                blanks = part_a + user_letter + part_b # joins parts with inserted letter 
+                print(hangman_stages[unsuccessful_tries]) # prints current status of hangman game 
+        
+            elif user_letter not in secret_word:  # if letter is not in secret word, unsuccessful tries increase, list of false letters is updated
+                unsuccessful_tries += 1
+                false_letters.append(user_letter)
+                print ("False letters: ", false_letters)
+                print("Unsuccessful tries: ", unsuccessful_tries)
+
+                if unsuccessful_tries < 7:  # Only print if unsuccessful_tries is 6 or less
+                    print(hangman_stages[unsuccessful_tries]) # current status of hangman is printed as long as unsuccessful tries is below 7
+        
+    if unsuccessful_tries == 7:  # if max amount of guesses is reached, game is lost
+        print ("Oh no! You lost!")
+        print (hangman_stages[-1]) # final hangman stage is printed
+        print(secret_word) # secret word is revealed
     
-        #  If the letter is not present, add one to unsuccessful tries. 
-        #  Print out the game “status” – string with underscores and already revealed letters or still just underscores. 
+    elif "-" not in blanks: # if there aren't any dashes left, game is won.
+        print ("Congrats! You guessed the word correctly!")
 
-        #  If in the string are no underscores, congratulate a player and end the game. 
-        #  Print out the number of unsuccessful tries and (if you want) print out the corresponding picture of a hangman. 
-        #  If the number of unsuccessful tries is 9 or higher, the player loses the game and ends the game.
-
-HANGMAN_PICS = ['''
-+---+
-    |
-    |
-    |
-    ===''', '''
-+---+
- O  |
-    |
-    |
-===''', '''
-+---+
- O  |
- |  |
-    |
-===''', '''
-+---+
- O  |
-/|  |
-    |
-===''', '''
-+---+
- O  |
-/|\ |
-    |
-===''', '''
-+---+
- O  |
-/|\ |
-/   
-===''', '''
-+---+
- O  |
-/|\ |
-/ \ |     
-===''']
+    return blanks, used_letters, false_letters
 
 
-
-words = ("pyladies", "thomas", "snack")
-false_letters = []
-unsuccessful_tries = 0
-secret_word = get_random_word(words)
-
-from random import randrange 
-def get_random_word(words):     # returns random string from the list 
-    random_index = randrange (0, len(words)) # returns random integer from 0 to length of list of words
-    print (words[random_index])
-    return words[random_index]  # returns random string from list of words with index stored in random variable
-
-
-get_random_word(words)
-
-def display_board(false_letters, unsuccessfull_tries, secret_word):
-    print (HANGMAN_PICS(len(false_letters)))
-    
-
-    for letter in false_letters: 
-        false_letters.append(letter)
-        print("False letters: ", false_letters, end = ' ')
-    
-    length_of_word = len(secret_word)
-    board = "-" * length_of_word
-
-
-   print(board)
-    return board
-
-# def game_status ():
-     
-# def play_again (): 
-
-
-
-
-
-
-
-
-# def move (board):
-      #  user_letter = input("Give me a letter, lowercase only: ")
-       # if user_letter in used_letters:
-           # print("You already used that one. Try again.")
-        #elif user_letter[i] in chosen_word:
-
-
-          #  board = board[i] + chosen_word [i] + board[i]
-
-
-
-
-
-           # position_user_letter = chosen_word.index(user_letter)
-            #print(position_user_letter)
-            #board[position_user_letter] == user_letter
-            #used_letters.append(user_letter)
-            #print(board)
-            #print(used_letters)
-        #elif user_letter not in chosen_word:
-         #   unsuccessful_tries += 1
-          #  used_letters.append(user_letter)
-           # print(board)
-            #print(used_letters)
-        #else: 
-           #  print("Am I a joke to you?")
-
-
-
-#move(empty_board())
-
-#def game (board, move):
-     
-
-# unsuccsessful_tries = 9  
-
-# If in the string are no underscores, congratulate a player and end the game. 
-        #  Print out the number of unsuccessful tries and (if you want) print out the corresponding picture of a hangman. 
-        #  If the number of unsuccessful tries is 9 or higher, the player loses the game and ends the game.
+player_move()
